@@ -4,7 +4,6 @@ var React = require('react-native');
 var moment = require('moment');
 
 var WeekForecastComponent = require('./WeekForecastComponent');
-var Forecast = require('./services/ForecastApi');
 var ForecastPresenter = require('./presenters/ForecastPresenter');
 
 var styles = require('./styles/ForecastPageStyle');
@@ -14,6 +13,7 @@ var {
 	View,
 	Image,
   ActivityIndicatorIOS,
+  TouchableHighlight,
 	Component
 } = React;
 
@@ -22,7 +22,6 @@ class ForecastPage extends Component {
   constructor(props) {
     super(props);
     this.state = this.getState();
-    this.forecast = new Forecast();
     this.presenter = new ForecastPresenter();
   }
 
@@ -35,11 +34,18 @@ class ForecastPage extends Component {
   }
 
 	componentDidMount() {
-    navigator.geolocation.getCurrentPosition(location => {
-      console.log('Location ', location);
+    this.getUserLocation((error, location) => {
+      if(error) {
+        console.log(error);
+        return;
+      }
       this.loadTemperature(location);
     });
 	}
+
+  componentWillUnmount() {
+    navigator.geolocation.stopObserving();
+  }
 
   render() {
     if(this.state.loading) {
@@ -60,9 +66,11 @@ class ForecastPage extends Component {
       		<Image
       			style={styles.icon} 
       			source={icon}/>
-	        <Text style={styles.temperature}>
-	          {currentTemperature}
-	        </Text>
+          <TouchableHighlight onPress={this.refresh.bind(this)} underlayColor={'#2C647E'}>
+  	        <Text style={styles.temperature}>
+  	          {currentTemperature}
+  	        </Text>
+          </TouchableHighlight>
 	        <Text style={styles.locationName}>
 	          {location}
 	        </Text>
@@ -74,6 +82,35 @@ class ForecastPage extends Component {
     );
   }
 
+  refresh() {
+    this.getUserLocation((error, location) => {
+      if(error) {
+        console.log(error);
+        return;
+      }
+      this.loadTemperature(location);
+    });
+  }
+
+  getUserLocation(callback) {
+    navigator.geolocation.getCurrentPosition(location => {
+      callback(null, location);
+    }, error => callback(error, null));
+  }
+
+  loadTemperature(location) {
+    this.presenter.loadTemperature(location, (error, json) => {
+      if(error) {
+        console.log(error);
+      } else {
+        this.setState({
+          currentForecast: json,
+          loading: false
+        });
+      }
+    });
+  }
+
   renderLoading() {
     return (
       <View style={styles.loadingContainer}>
@@ -82,24 +119,6 @@ class ForecastPage extends Component {
           size='large'/>
       </View>
     );
-  }
-
-  loadTemperature(location) {
-    var options = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    };
-
-  	this.forecast.query(options, (error, json) => {
-  		if(error) {
-  			console.log(error);
-  		} else {
-  			this.setState({
-  				currentForecast: json,
-          loading: false
-  			});
-  		}
-  	});
   }
 
 }

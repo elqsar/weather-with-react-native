@@ -2,7 +2,13 @@
 
 var moment = require('moment');
 
+var Forecast = require('../services/ForecastApi');
+
 class ForecastPresenter {
+
+  constructor() {
+    this.forecast = new Forecast();
+  }
 
 	createInterval(limit) {
 		var days = [];
@@ -36,6 +42,21 @@ class ForecastPresenter {
 
   getCurrentTemperature(temperature) {
   	return Number(temperature).toFixed(0);
+  }
+
+  loadTemperature(location, callback) {
+    var options = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    };
+
+    this.forecast.query(options, (error, json) => {
+      if(error) {
+        return callback(error, null);
+      } else {
+        return callback(null, json);
+      }
+    });
   }
 
 }
