@@ -24,5 +24,10 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 10
+  },
+  miniIcon: {
+    width: 20,
+    height: 15,
+    resizeMode: 'contain'
   }
 });

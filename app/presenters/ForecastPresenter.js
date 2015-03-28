@@ -12,7 +12,7 @@ class ForecastPresenter {
 
 	createInterval(limit) {
 		var days = [];
-    for(var i = 0; i < limit; i++) {
+    for(var i = 1; i <= limit; i++) {
       days.push(moment().add(i, 'days').format('dddd').substr(0, 3));
     }
     return days;
@@ -30,7 +30,7 @@ class ForecastPresenter {
       case 'fog': return require('image!fog');
       case 'snow': return require('image!snow');
       case 'wind': return require('image!wind');
-      default: return require('image!default');
+      default: return require('image!cloudy');
     }
   }
 
