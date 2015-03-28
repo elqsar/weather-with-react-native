@@ -1,0 +1,30 @@
+{
+  "name": "forecaster",
+  "version": "0.0.1",
+  "private": true,
+  "jest": {
+    "scriptPreprocessor": "./jestConfig/preprocessor.js",
+    "setupEnvScriptFile": "./jestConfig/env.js",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "packager/react-packager/src/Activity/"
+    ],
+    "testFileExtensions": [
+      "js"
+    ],
+    "unmockedModulePathPatterns": [
+      "source-map"
+    ]
+  },
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh",
+    "test": "jest"
+  },
+  "dependencies": {
+    "moment": "^2.9.0",
+    "react-native": "^0.3.0"
+  },
+  "devDependencies": {
+    "jest-cli": "^0.4.0"
+  }
+}
