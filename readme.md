@@ -11,6 +11,6 @@
 
 How to run:  
 
-1 Add your api key from https://developer.forecast.io/ to config.js.
-2 Run npm install
-3 Open Project in Xcode and run( i have tested it on simulator and real 5s device) 
+1 Add your api key from https://developer.forecast.io/ to config.js.  
+2 Run npm install  
+3 Open Project in Xcode and run( i have tested it on simulator and real 5s device)  
